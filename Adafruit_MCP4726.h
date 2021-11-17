@@ -35,9 +35,9 @@ public:
              TwoWire *wire = &Wire);
   bool setVoltage(uint16_t output, bool writeEEPROM,
                   uint32_t dac_frequency = 400000);
-  bool setGain(uint8_t gain, uint32_t dac_frequency = 400000);
     
-  bool setVref(uint8_t ref, uint32_t dac_frequency = 400000);
+  bool setConfig(uint8_t Vref, uint8_t gain, uint32_t dac_frequency = 400000);
+   
 
 private:
   Adafruit_I2CDevice *i2c_dev = NULL;
