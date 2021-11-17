@@ -60,9 +60,10 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
 bool Adafruit_MCP4726::setGain(uint16_t gain, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
     
-    uint8_t packet[2];
-    packet[0] = MCP4726_GAIN_MASK;
-    packet[1] = gain;
+    uint8_t packet[3];
+    packet[0] = MCP4726_CMD_WRITEDACEEPROM;
+    packet[1] = MCP4726_GAIN_MASK;
+    packet[2] = gain;
     
     if (!i2c_dev->write(packet, 3)) {
     return false;
@@ -87,11 +88,12 @@ bool Adafruit_MCP4726::setGain(uint16_t gain, uint32_t i2c_frequency){
 bool Adafruit_MCP4726::setVref(uint16_t Vref, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
     
-    uint8_t packet[2];
-    packet[0] = MCP4726_VREF_MASK;
-    packet[1] = Vref;
+    uint8_t packet[3];
+    packet[0] = MCP4726_CMD_WRITEDACEEPROM;
+    packet[1] = MCP4726_VREF_MASK;
+    packet[2] = Vref;
     
-    if (!i2c_dev->write(packet, 2)) {
+    if (!i2c_dev->write(packet, 3)) {
     return false;
   }
 
