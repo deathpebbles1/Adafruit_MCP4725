@@ -1,11 +1,12 @@
 /**************************************************************************/
 /*!
-    @file     Adafruit_MCP4725.cpp
+    @file     Adafruit_MCP4726.cpp
     @author   K.Townsend (Adafruit Industries)
+    @edited by J. Bin
 
-        I2C Driver for Microchip's MCP4725 I2C DAC
+        I2C Driver for Microchip's MCP4726 I2C DAC
 
-        This is a library for the Adafruit MCP4725 breakout
+        This is a modified library for the MCP4726 breakout, based off of the original adafruit MCP4725 library, for thier breakout board linked below.
         ----> http://www.adafruit.com/products/935
 
         Adafruit invests time and resources providing this open source code,
@@ -17,14 +18,14 @@
 */
 /**************************************************************************/
 
-#include "Adafruit_MCP4725.h"
+#include "Adafruit_MCP4726.h"
 
 /**************************************************************************/
 /*!
-    @brief  Instantiates a new MCP4725 class
+    @brief  Instantiates a new MCP4726 class
 */
 /**************************************************************************/
-Adafruit_MCP4725::Adafruit_MCP4725() {}
+Adafruit_MCP4726::Adafruit_MCP4726() {}
 
 /**************************************************************************/
 /*!
@@ -34,7 +35,7 @@ Adafruit_MCP4725::Adafruit_MCP4725() {}
     @returns True if DAC was found on the I2C address.
 */
 /**************************************************************************/
-bool Adafruit_MCP4725::begin(uint8_t i2c_address, TwoWire *wire) {
+bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
   if (i2c_dev) {
     delete i2c_dev;
   }
@@ -58,7 +59,7 @@ bool Adafruit_MCP4725::begin(uint8_t i2c_address, TwoWire *wire) {
                 the DAC's input voltage and its output voltage.
     @param[in]  writeEEPROM
                 If this value is true, 'output' will also be written
-                to the MCP4725's internal non-volatile memory, meaning
+                to the MCP4726's internal non-volatile memory, meaning
                 that the DAC will retain the current voltage output
                 after power-down or reset.
     @param i2c_frequency What we should set the I2C clock to when writing
@@ -66,16 +67,16 @@ bool Adafruit_MCP4725::begin(uint8_t i2c_address, TwoWire *wire) {
     @returns True if able to write the value over I2C
 */
 /**************************************************************************/
-bool Adafruit_MCP4725::setVoltage(uint16_t output, bool writeEEPROM,
+bool Adafruit_MCP4726::setVoltage(uint16_t output, bool writeEEPROM,
                                   uint32_t i2c_frequency) {
   i2c_dev->setSpeed(i2c_frequency); // Set I2C frequency to desired speed
 
   uint8_t packet[3];
 
   if (writeEEPROM) {
-    packet[0] = MCP4725_CMD_WRITEDACEEPROM;
+    packet[0] = MCP4726_CMD_WRITEDACEEPROM;
   } else {
-    packet[0] = MCP4725_CMD_WRITEDAC;
+    packet[0] = MCP4726_CMD_WRITEDAC;
   }
   packet[1] = output / 16;        // Upper data bits (D11.D10.D9.D8.D7.D6.D5.D4)
   packet[2] = (output % 16) << 4; // Lower data bits (D3.D2.D1.D0.x.x.x.x)
