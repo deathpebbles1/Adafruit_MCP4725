@@ -57,14 +57,14 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
     @returns True if DAC was found on the I2C address.
 */
 /**************************************************************************/  
-bool Adafruit_MCP4726::setGain(uint8_t gain, uint32_t i2c_frequency){
+bool Adafruit_MCP4726::setGain(uint16_t gain, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
     
-    uint8_t packet(2);
+    uint8_t packet[];
     packet[0] = MCP4726_GAIN_MASK;
     packet[1] = gain;
     
-    if (!i2c_dev->write(packet, 2)) {
+    if (!i2c_dev->write(packet, 3)) {
     return false;
   }
 
@@ -84,10 +84,10 @@ bool Adafruit_MCP4726::setGain(uint8_t gain, uint32_t i2c_frequency){
     @returns True if DAC was found on the I2C address.
 */
 /**************************************************************************/ 
-bool Adafruit_MCP4726::setVref(uint8_t Vref, uint32_t i2c_frequency){
+bool Adafruit_MCP4726::setVref(uint16_t Vref, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
     
-    uint8_t packet(2);
+    uint8_t packet[2];
     packet[0] = MMCP4726_VREF_MASK;
     packet[1] = Vref;
     
