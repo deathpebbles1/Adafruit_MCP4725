@@ -48,29 +48,6 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
 
   return true;
 }
-/**************************************************************************/
-/*!
-    @param i2c_frequency What we should set the I2C clock to when writing
-    to the DAC, defaults to 400 KHz. 
-    @param[in] gain 
-    Selected internal gain for the V-ref. Can choose between 2x or 1x.
-    @returns True if DAC was found on the I2C address.
-*/
-/**************************************************************************/  
-bool Adafruit_MCP4726::setGain(uint8_t gain, uint32_t i2c_frequency){
-    i2c_dev->setSpeed(i2c_frequency);
-    
-    uint8_t packet[2];
-    packet[0] = MCP4726_CMD_WRITECONFIG;
-    packet[1] = gain;
-    
-    if (!i2c_dev->write(packet, 2)) {
-    return false;
-  }
-
-  i2c_dev->setSpeed(100000); // reset to arduino default
-  return true;
-}
 
 
 /**************************************************************************/
@@ -84,17 +61,15 @@ bool Adafruit_MCP4726::setGain(uint8_t gain, uint32_t i2c_frequency){
     @returns True if DAC was found on the I2C address.
 */
 /**************************************************************************/ 
-bool Adafruit_MCP4726::setVref(uint8_t Vref, uint32_t i2c_frequency){
+bool Adafruit_MCP4726::setConfig(uint8_t Vref, uint8_t gain, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
     
-    uint8_t packet[2];
-    packet[0] = MCP4726_CMD_WRITECONFIG;
-    packet[1] = Vref;
+    uint8_t packet[1];
+    packet[0] = MCP4726_CMD_WRITECONFIG | Vref | gain;
     
-    if (!i2c_dev->write(packet, 2)) {
+    if (!i2c_dev->write(packet, 1)) {
     return false;
   }
-
   i2c_dev->setSpeed(100000); // reset to arduino default
   return true;
 }
