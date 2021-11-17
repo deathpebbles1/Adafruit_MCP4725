@@ -41,6 +41,7 @@ public:
 
 private:
   Adafruit_I2CDevice *i2c_dev = NULL;
+  uint8_t config;
 };
 
 #endif

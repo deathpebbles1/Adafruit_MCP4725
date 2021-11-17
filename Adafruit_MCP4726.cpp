@@ -63,9 +63,11 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
 /**************************************************************************/ 
 bool Adafruit_MCP4726::setConfig(uint8_t Vref, uint8_t gain, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
-    
+    config = ((MCP4726_CMD_WRITECONFIG | Vref) | gain);
+
     uint8_t packet[1];
-    packet[0] = MCP4726_CMD_WRITECONFIG | Vref | gain;
+    
+    packet[0] = config;
     
     if (!i2c_dev->write(packet, 1)) {
     return false;
