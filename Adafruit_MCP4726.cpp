@@ -30,7 +30,7 @@ Adafruit_MCP4726::Adafruit_MCP4726() {}
 /**************************************************************************/
 /*!
     @brief  Setups the hardware and checks the DAC was found
-    @param i2c_address The I2C address of the DAC, defaults to 0x62
+    @param i2c_address The I2C address of the DAC, defaults to 0x60
     @param wire The I2C TwoWire object to use, defaults to &Wire
     @returns True if DAC was found on the I2C address.
 */
@@ -48,6 +48,57 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
 
   return true;
 }
+/**************************************************************************/
+/*!
+    @param i2c_frequency What we should set the I2C clock to when writing
+    to the DAC, defaults to 400 KHz. 
+    @param[in] gain 
+    Selected internal gain for the V-ref. Can choose between 2x or 1x.
+    @returns True if DAC was found on the I2C address.
+*/
+/**************************************************************************/  
+bool Adafruit_MCP4726::setGain(uint8_t gain, uint32_t i2c_frequency){
+    i2c_dev->setSpeed(i2c_frequency);
+    
+    uint8_t packet(2);
+    packet[0] = MCP4726_GAIN_MASK;
+    packet[1] = gain;
+    
+    if (!i2c_dev->write(packet, 2)) {
+    return false;
+  }
+
+  i2c_dev->setSpeed(100000); // reset to arduino default
+  return true;
+}
+
+
+/**************************************************************************/
+/*!
+    @param i2c_frequency What we should set the I2C clock to when writing
+    to the DAC, defaults to 400 KHz. 
+    @param[in] Vref 
+    Selected voltage reference source. Can choose between VDD 9(aka, supply voltage),
+    Vref pin, or use the VRef pin with a buffer. Buffer is good for high impedence
+    voltage reference sources.
+    @returns True if DAC was found on the I2C address.
+*/
+/**************************************************************************/ 
+bool Adafruit_MCP4726::setVref(uint8_t Vref, uint32_t i2c_frequency){
+    i2c_dev->setSpeed(i2c_frequency);
+    
+    uint8_t packet(2);
+    packet[0] = MMCP4726_VREF_MASK;
+    packet[1] = Vref;
+    
+    if (!i2c_dev->write(packet, 2)) {
+    return false;
+  }
+
+  i2c_dev->setSpeed(100000); // reset to arduino default
+  return true;
+}
+
 
 /**************************************************************************/
 /*!
