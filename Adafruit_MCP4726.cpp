@@ -63,11 +63,11 @@ bool Adafruit_MCP4726::begin(uint8_t i2c_address, TwoWire *wire) {
 /**************************************************************************/ 
 bool Adafruit_MCP4726::setConfig(uint8_t Vref, uint8_t gain, uint32_t i2c_frequency){
     i2c_dev->setSpeed(i2c_frequency);
-    config = ((MCP4726_CMD_WRITECONFIG | Vref) | gain);
+    config = (Vref | gain);
 
     uint8_t packet[1];
     
-    packet[0] = config;
+    packet[0] = (MCP4726_CMD_WRITECONFIG | config);
     
     if (!i2c_dev->write(packet, 1)) {
     return false;
@@ -102,9 +102,9 @@ bool Adafruit_MCP4726::setVoltage(uint16_t output, bool writeEEPROM,
   uint8_t packet[3];
 
   if (writeEEPROM) {
-    packet[0] = MCP4726_CMD_WRITEDACEEPROM;
+    packet[0] = (MCP4726_CMD_WRITEDACEEPROM | config);
   } else {
-    packet[0] = MCP4726_CMD_WRITEDAC;
+    packet[0] = (MCP4726_CMD_WRITEDAC | config);
   }
   packet[1] = output / 16;        // Upper data bits (D11.D10.D9.D8.D7.D6.D5.D4)
   packet[2] = (output % 16) << 4; // Lower data bits (D3.D2.D1.D0.x.x.x.x)
